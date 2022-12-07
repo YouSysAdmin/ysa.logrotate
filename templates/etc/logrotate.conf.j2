@@ -1,0 +1,13 @@
+{{ ansible_managed | comment }}
+
+{% if logrotate_options | length > 0 %}
+{% for option in logrotate_options %}
+{{ option }}
+{% endfor %}
+{% else %}
+{% for option in logrotate_default_options %}
+{{ option }}
+{% endfor %}
+{% endif %}
+
+include {{ logrotate_include_dir }}

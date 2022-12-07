@@ -1,0 +1,20 @@
+---
+# Main
+
+- name: include os specific variables
+  include_vars: "vars/{{ ansible_distribution | lower | replace(' ', '') }}.yml"
+  tags:
+    - always
+
+- name: include install tasks
+  include_tasks: 'install.yml'
+  when: logrotate_install | bool
+  tags:
+    - logrotate
+    - logrotate_install
+
+- name: include install tasks
+  include_tasks: 'configure.yml'
+  tags:
+    - logrotate
+    - logrotate_configure
