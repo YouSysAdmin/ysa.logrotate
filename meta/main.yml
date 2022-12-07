@@ -1,0 +1,29 @@
+galaxy_info:
+  author: YouSysAdmin
+  description: Installing and configuring logrotate.
+
+  license: MIT
+
+  min_ansible_version: 2.1
+
+  platforms:
+   - name: Redhat
+     versions:
+     - all
+   - name: Arch Linux
+     versions:
+     - all
+   - name: Ubuntu
+     versions:
+     - all
+   - name: Debian
+     versions:
+     - all
+   - name: CentOS
+     versions:
+     - all
+
+  galaxy_tags:
+    - logrotate
+
+dependencies: []

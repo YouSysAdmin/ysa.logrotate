@@ -1,0 +1,8 @@
+---
+logrotate_package: logrotate
+logrotate_default_options:
+  - weekly
+  - rotate 4
+  - copytruncate
+  - dateext
+  - compress

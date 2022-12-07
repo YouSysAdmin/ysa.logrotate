@@ -1,0 +1,55 @@
+---
+# Configure
+
+- name: include os specific variables
+  include_vars: "vars/{{ ansible_distribution | lower | replace(' ', '') }}.yml"
+
+- name: prepare configs list
+  set_fact:
+    rotate_configs_list: '{{ logrotate_logs }}'
+
+- name: add wtmp to configs list
+  set_fact:
+    rotate_configs_list: '{{ rotate_configs_list + logrotate_wtmp }}'
+  when: logrotate_enable_wtmp_rotate | bool
+
+- name: add btmp to configs list
+  set_fact:
+    rotate_configs_list: '{{ rotate_configs_list + logrotate_btmp }}'
+  when: logrotate_enable_btmp_rotate | bool
+
+- name: create logrotate main configuration file
+  become: true
+  template:
+    src: 'etc/logrotate.conf.j2'
+    dest: '/etc/logrotate.conf'
+    owner: root
+    group: root
+    mode: 0644
+
+- name: find old config files
+  find:
+    paths: '{{ logrotate_include_dir }}'
+    recurse: no
+    file_type: file
+  register: found_logrotate_configs
+  when: logrotate_cleanup_configs | bool
+
+- name: delete old config files
+  file:
+    name: "{{ found_logrotate_configs }}/{{ item }}"
+    state: absent
+  with_items: "{{ found_logrotate_configs.files }}"
+  ignore_errors: "{{ ansible_check_mode }}"
+  when: found_logrotate_configs.files is defined
+
+- name: create logrotate rotation configuration files
+  become: true
+  template:
+    src: 'etc/logrotate.d/rotate.j2'
+    dest: '{{ logrotate_include_dir }}/{{ item.name }}'
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - '{{ rotate_configs_list }}'

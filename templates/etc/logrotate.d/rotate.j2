@@ -1,0 +1,35 @@
+{{ ansible_managed | comment }}
+
+{{ item.paths | join(' ') }} {
+{% for option in item.options %}
+    {{ option }}
+{% endfor %}
+{% if item.firstaction|default([]) %}
+    firstaction
+{% for line in item.firstaction %}
+        {{ line }}
+{% endfor %}
+    endscript
+{% endif %}
+{% if item.lastaction|default([]) %}
+    lastaction
+{% for line in item.lastaction %}
+        {{ line }}
+{% endfor %}
+    endscript
+{% endif %}
+{% if item.prerotate|default([]) %}
+    prerotate
+{% for line in item.prerotate %}
+        {{ line }}
+{% endfor %}
+    endscript
+{% endif %}
+{% if item.postrotate|default([]) %}
+    postrotate
+{% for line in item.postrotate %}
+        {{ line }}
+{% endfor %}
+    endscript
+{% endif %}
+}

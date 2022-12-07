@@ -1,0 +1,13 @@
+---
+- name: include install tasks
+  include_tasks: 'install.yml'
+  when: logrotate_install | bool
+  tags:
+    - logrotate
+    - logrotate_install
+
+- name: include install tasks
+  include_tasks: 'configure.yml'
+  tags:
+    - logrotate
+    - logrotate_configure

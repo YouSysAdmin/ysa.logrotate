@@ -1,0 +1,8 @@
+---
+# Install
+
+- name: install logrotate packages
+  become: true
+  package:
+    name: '{{ logrotate_package }}'
+    state: present
